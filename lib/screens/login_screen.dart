@@ -76,7 +76,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const FlutterLogo(size: 100),
+              // const FlutterLogo(size: 100),
+              Icon(
+                Icons.question_answer,
+                size: 100,
+                color: Colors.blue,
+              ),
               const SizedBox(height: 32),
               CustomTextField(controller: _emailController, label: 'Correo electrónico'),
               const SizedBox(height: 16),
