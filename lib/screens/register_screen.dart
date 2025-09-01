@@ -15,6 +15,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmController = TextEditingController();
   final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
+  String _selectedRole = 'user'; // Valor por defecto
 
   void _register() async {
     if (_passwordController.text != _confirmController.text) {
@@ -28,31 +29,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final user = await _authService.register(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        _selectedRole,
       );
 
       if (user != null) {
-        // Mandar correo de verificación
-        await user.sendEmailVerification();
+        // await user.sendEmailVerification();
+        // await _authService.logout();
 
-        // 🔒 Cerrar sesión inmediatamente para obligar a verificar
-        await _authService.logout();
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text(
+        //       'Registro exitoso. Te enviamos un correo de verificación.',
+        //     ),
+        //   ),
+        // );
 
-        // Avisar al usuario
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Registro exitoso. Te enviamos un correo de verificación. Revisa tu bandeja de entrada. En caso de que no aparezca, revisa tu correo no deseado.',
-            ),
-          ),
-        );
-
-        // En lugar de mandarlo al home, lo llevamos al login
         Navigator.pushReplacementNamed(context, '/login');
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}'))
+      );
     }
   }
 
@@ -71,6 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               CustomTextField(
                 controller: _emailController,
                 label: 'Correo electrónico',
+                // keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -92,6 +90,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () =>
                       setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
+              ),
+              const SizedBox(height: 16),
+              // Selector de rol
+              DropdownButtonFormField<String>(
+                value: _selectedRole,
+                decoration: const InputDecoration(
+                  labelText: 'Tipo de usuario',
+                  border: OutlineInputBorder(),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'user',
+                    child: Text('Usuario normal'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'admin',
+                    child: Text('Administrador'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRole = value!;
+                  });
+                },
               ),
               const SizedBox(height: 24),
               SizedBox(

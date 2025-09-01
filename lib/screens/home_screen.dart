@@ -1,21 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-class TestFirebase extends StatelessWidget {
-  const TestFirebase({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    return Scaffold(
-      body: Center(
-        child: Text(user == null ? 'No hay usuario' : 'Usuario: ${user.email}'),
-      ),
-    );
-  }
-}
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,7 +11,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Inicio'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -39,9 +23,19 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text('¡Bienvenido, $email!', style: const TextStyle(fontSize: 24)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.person, size: 100, color: Colors.blue),
+            const SizedBox(height: 20),
+            Text('¡Bienvenido, $email!', 
+                 style: const TextStyle(fontSize: 24)),
+            const SizedBox(height: 20),
+            const Text('Eres un usuario normal',
+                 style: TextStyle(fontSize: 18, color: Colors.grey)),
+          ],
+        ),
       ),
     );
   }
 }
-

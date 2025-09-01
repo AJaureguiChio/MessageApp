@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/role_service.dart';
 import '../widgets/custom_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
+  final RoleService _roleService = RoleService();
   bool _isPasswordVisible = false;
 
   void _login() async {
@@ -23,47 +25,52 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (user != null) {
-  if (!user.emailVerified) {
-    await _authService.logout(); // cerrar sesión
+        // if (!user.emailVerified) {
+        //   await _authService.logout();
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: Row(
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           const Expanded(
+        //             child: Text('Debes verificar tu correo antes de iniciar sesión.'),
+        //           ),
+        //           TextButton(
+        //             onPressed: () async {
+        //               await user.sendEmailVerification();
+        //               ScaffoldMessenger.of(context).showSnackBar(
+        //                 const SnackBar(
+        //                   content: Text('Correo de verificación reenviado.'),
+        //                 ),
+        //               );
+        //             },
+        //             child: const Text(
+        //               'Reenviar',
+        //               style: TextStyle(color: Colors.white),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   );
+        //   return;
+        // }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Expanded(
-              child: Text('Debes verificar tu correo antes de iniciar sesión.'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await user.sendEmailVerification();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Correo de verificación reenviado.'),
-                  ),
-                );
-              },
-              child: const Text(
-                'Reenviar',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    return;
-  }
-
-  Navigator.pushReplacementNamed(context, '/home');
-}
+        // Verificar el rol del usuario y redirigir según corresponda
+        final role = await _roleService.getUserRole(user.uid);
+        
+        if (role == 'admin') {
+          Navigator.pushReplacementNamed(context, '/adminHome');
+        } else {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
+      }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}'))
+      );
     }
   }
-
 
   void _goToRegister() => Navigator.pushNamed(context, '/register');
 
@@ -76,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // const FlutterLogo(size: 100),
               Icon(
                 Icons.question_answer,
                 size: 100,
