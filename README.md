@@ -1,12 +1,11 @@
-# message_app
+# Aplicación de mensajería
 
-A new Flutter project.
+El objetivo del proyecto es crear una aplicación de mensajería, con la que puedes crear una cuenta y puedes mandar mensajes, así como también hacer videollamadas.
+
+## Este proyecto fue realizado en Dart usando Flutter
+
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
