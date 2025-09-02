@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/role_service.dart';
 import '../widgets/custom_textfield.dart';
+import '../services/language_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
 
   void _login() async {
+    await LanguageService.loadJson();
+
     try {
       final user = await _authService.login(
         _emailController.text.trim(),
@@ -89,11 +92,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.blue,
               ),
               const SizedBox(height: 32),
-              CustomTextField(controller: _emailController, label: 'Correo electrónico'),
+              CustomTextField(controller: _emailController, label: LanguageService.textJsonReference("email_address")),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _passwordController,
-                label: 'Contraseña',
+                label: LanguageService.textJsonReference("password"),
                 obscureText: !_isPasswordVisible,
                 suffixIcon: IconButton(
                   icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
@@ -103,10 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(onPressed: _login, child: const Text('Iniciar sesión')),
+                child: ElevatedButton(onPressed: _login, child: Text(LanguageService.textJsonReference("login_button"))),
               ),
               const SizedBox(height: 12),
-              TextButton(onPressed: _goToRegister, child: const Text('¿No tienes cuenta? Regístrate')),
+              TextButton(onPressed: _goToRegister, child: Text(LanguageService.textJsonReference("go_to_register"))),
             ],
           ),
         ),

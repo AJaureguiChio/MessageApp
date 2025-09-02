@@ -1,5 +1,45 @@
 {
     "es" : {
-        "registro_boton" : "hi"
-}
+        "go_to_login" : "¿Ya tienes cuenta? Inicia sesión",
+        "go_to_register" : "¿No tienes cuenta? Regístrate",
+        "email_address" : "Correo electrónico",
+        "password" : "Contraseña",
+        "confirm_password" : "Confirmar contraseña",
+        "register_button" : "Registrarse",
+        "user_type" : "Tipo de usuario",
+        "user_type_normal" : "Usuario normal",
+        "user_type_admin" : "Administrador",
+        "login_button" : "Iniciar sesión",
+        "welcome" : "Bienvenido, ",
+        "welcome_admin" : "¡Bienvenido, administrador ",
+        "you_regular" : "Eres un usuario normal",
+        "home" : "Inicio",
+        "administrator_panel" : "Panel de administrador",
+        "exclusive_functions_admin" : "Funciones exclusivas de administrador:",
+        "admin_function" : "Función de administrador",
+        "administrate_users" : "Gestionar usuarios",
+        "Settings" : "Configuración"
+    },
+    
+    "en" : {
+        "go_to_login" : "You already have an account? Log in",
+        "go_to_register" : "Don't have an account? Register here",
+        "email_address" : "Email address",
+        "password" : "Password",
+        "confirm_password" : "Confirm password",
+        "register_button" : "Register",
+        "user_type" : "User type",
+        "user_type_normal" : "User",
+        "user_type_admin" : "Administrator",
+        "login_button" : "Log in",
+        "welcome" : "Welcome, ",
+        "you_regular" : "You're a regular user",
+        "home" : "Home",
+        "welcome_admin" : "Welcome, admin ",
+        "administrator_panel" : "Administrator panel",
+        "exclusive_functions_admin" : "Exclusive admin functions:",
+        "admin_function" : "Admin function",
+        "administrate_users" : "Administrate users",
+        "Settings" : "Configuración"
+    }
 }
