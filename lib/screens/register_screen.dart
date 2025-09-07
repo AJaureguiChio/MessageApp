@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
 import '../widgets/custom_textfield.dart';
+import '../services/language_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -10,6 +12,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -54,11 +57,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _goToLogin() => Navigator.pop(context);
-
   @override
+
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registro')),
+      appBar: AppBar(title: Text(LanguageService.textJsonReference("register_button"))),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -67,19 +71,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               CustomTextField(
                 controller: _emailController,
-                label: 'Correo electrónico',
+                label:LanguageService.textJsonReference("email_address"),
                 // keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _passwordController,
-                label: 'Contraseña',
+                label: LanguageService.textJsonReference("password"),
                 obscureText: !_isPasswordVisible,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _confirmController,
-                label: 'Confirmar contraseña',
+                label: LanguageService.textJsonReference("confirm_password"),
                 obscureText: !_isPasswordVisible,
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -95,18 +99,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Selector de rol
               DropdownButtonFormField<String>(
                 value: _selectedRole,
-                decoration: const InputDecoration(
-                  labelText: 'Tipo de usuario',
+                decoration: InputDecoration(
+                  labelText: LanguageService.textJsonReference("user_type"),
                   border: OutlineInputBorder(),
                 ),
-                items: const [
+                items: [
                   DropdownMenuItem(
                     value: 'user',
-                    child: Text('Usuario normal'),
+                    child: Text(LanguageService.textJsonReference("user_type_normal")),
                   ),
                   DropdownMenuItem(
                     value: 'admin',
-                    child: Text('Administrador'),
+                    child: Text(LanguageService.textJsonReference("user_type_admin")),
                   ),
                 ],
                 onChanged: (value) {
@@ -120,14 +124,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _register,
-                  child: const Text('Registrarse'),
+                  child: Text(LanguageService.textJsonReference("register_button")),
                 ),
               ),
               const SizedBox(height: 12),
               TextButton(
                 onPressed: _goToLogin,
-                child: const Text('¿Ya tienes cuenta? Inicia sesión'),
+                child: Text(LanguageService.textJsonReference("go_to_login")),
               ),
+              
+              ElevatedButton(
+                onPressed: (){
+                  LanguageService.loadJson();
+                  LanguageService.changeLanguage();
+                  setState(() {});
+              },
+              child : Center(child: Text("Idioma")),)
+
             ],
           ),
         ),
