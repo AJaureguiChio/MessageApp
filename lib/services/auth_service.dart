@@ -10,14 +10,14 @@ class AuthService {
       email: email,
       password: password,
     );
-    
+
     // Guardar el rol del usuario en Firestore
     await _firestore.collection('users').doc(credential.user!.uid).set({
       'email': email,
       'role': role,
       'createdAt': FieldValue.serverTimestamp(),
     });
-    
+
     await credential.user?.sendEmailVerification();
     return credential.user;
   }

@@ -12,7 +12,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
@@ -50,19 +49,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.pushReplacementNamed(context, '/login');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}'))
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
   void _goToLogin() => Navigator.pop(context);
   @override
-
-
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(LanguageService.textJsonReference("register_button"))),
+      appBar: AppBar(
+        title: Text(LanguageService.textJsonReference("register_button")),
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -71,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               CustomTextField(
                 controller: _emailController,
-                label:LanguageService.textJsonReference("email_address"),
+                label: LanguageService.textJsonReference("email_address"),
                 // keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
@@ -106,11 +105,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 items: [
                   DropdownMenuItem(
                     value: 'user',
-                    child: Text(LanguageService.textJsonReference("user_type_normal")),
+                    child: Text(
+                      LanguageService.textJsonReference("user_type_normal"),
+                    ),
                   ),
                   DropdownMenuItem(
                     value: 'admin',
-                    child: Text(LanguageService.textJsonReference("user_type_admin")),
+                    child: Text(
+                      LanguageService.textJsonReference("user_type_admin"),
+                    ),
                   ),
                 ],
                 onChanged: (value) {
@@ -124,7 +127,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _register,
-                  child: Text(LanguageService.textJsonReference("register_button")),
+                  child: Text(
+                    LanguageService.textJsonReference("register_button"),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -132,15 +137,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: _goToLogin,
                 child: Text(LanguageService.textJsonReference("go_to_login")),
               ),
-              
+
               ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   LanguageService.loadJson();
                   LanguageService.changeLanguage();
                   setState(() {});
-              },
-              child : Center(child: Text("Idioma")),)
-
+                },
+                child: Center(child: Text("Idioma")),
+              ),
             ],
           ),
         ),

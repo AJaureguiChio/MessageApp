@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               await authService.logout();
               Navigator.pushReplacementNamed(context, '/login');
             },
-          )
+          ),
         ],
       ),
       body: Center(
@@ -31,11 +31,15 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Icon(Icons.person, size: 100, color: Colors.blue),
             const SizedBox(height: 20),
-            Text(LanguageService.textJsonReference("welcome") + email, 
-                 style: const TextStyle(fontSize: 24)),
+            Text(
+              LanguageService.textJsonReference("welcome") + email,
+              style: const TextStyle(fontSize: 24),
+            ),
             const SizedBox(height: 20),
-            Text(LanguageService.textJsonReference("you_regular"),
-                 style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text(
+              LanguageService.textJsonReference("you_regular"),
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
           ],
         ),
       ),

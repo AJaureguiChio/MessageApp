@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Verificar el rol del usuario y redirigir según corresponda
         final role = await _roleService.getUserRole(user.uid);
-        
+
         if (role == 'admin') {
           Navigator.pushReplacementNamed(context, '/adminHome');
         } else {
@@ -69,9 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}'))
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
@@ -86,30 +86,44 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.question_answer,
-                size: 100,
-                color: Colors.blue,
-              ),
+              Icon(Icons.question_answer, size: 100, color: Colors.blue),
               const SizedBox(height: 32),
-              CustomTextField(controller: _emailController, label: LanguageService.textJsonReference("email_address")),
+              CustomTextField(
+                controller: _emailController,
+                label: LanguageService.textJsonReference("email_address"),
+              ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: _passwordController,
                 label: LanguageService.textJsonReference("password"),
                 obscureText: !_isPasswordVisible,
                 suffixIcon: IconButton(
-                  icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: () =>
+                      setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(onPressed: _login, child: Text(LanguageService.textJsonReference("login_button"))),
+                child: ElevatedButton(
+                  onPressed: _login,
+                  child: Text(
+                    LanguageService.textJsonReference("login_button"),
+                  ),
+                ),
               ),
               const SizedBox(height: 12),
-              TextButton(onPressed: _goToRegister, child: Text(LanguageService.textJsonReference("go_to_register"))),
+              TextButton(
+                onPressed: _goToRegister,
+                child: Text(
+                  LanguageService.textJsonReference("go_to_register"),
+                ),
+              ),
             ],
           ),
         ),
