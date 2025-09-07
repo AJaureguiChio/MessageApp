@@ -11,5 +11,10 @@ void main() async {
   );
 
   await LanguageService.loadJson();
-  runApp(const MyApp());
+  runApp(
+  ValueListenableBuilder<int>(
+    valueListenable: LanguageService.languageNotifier,
+    builder: (_, __, ___) => const MyApp(),
+  ),
+);
 }

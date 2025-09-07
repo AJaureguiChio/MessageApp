@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class LanguageService {
   static int selection = 0;
   static Map<String, dynamic> _language = {};
-  static final List<String> _languageOption = ["es", "en"];
+  static List<String> _languageOption = ["es", "en"];
 
   static ValueNotifier<int> languageNotifier = ValueNotifier<int>(selection);
 

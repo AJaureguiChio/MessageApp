@@ -5,21 +5,29 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> register(String email, String password, String role) async {
-    final credential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    Future<User?> register(String email, String password, String role) async {
+    try {
+      final credential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print('Auth OK uid=${credential.user!.uid}');
 
-    // Guardar el rol del usuario en Firestore
-    await _firestore.collection('users').doc(credential.user!.uid).set({
-      'email': email,
-      'role': role,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+      // <-- AÑADE ESTO
+      await _firestore.collection('users').doc(credential.user!.uid).set({
+        'email': email,
+        'role': role,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      print('Firestore document created');
 
-    await credential.user?.sendEmailVerification();
-    return credential.user;
+      await credential.user?.sendEmailVerification();
+      return credential.user;
+    } catch (e) {
+      print('Error en register: $e');
+      rethrow; // para que lo vea el widget
+    }
   }
 
   Future<User?> login(String email, String password) async {

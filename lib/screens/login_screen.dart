@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
 
   void _login() async {
-    await LanguageService.loadJson();
+    
 
     try {
       final user = await _authService.login(

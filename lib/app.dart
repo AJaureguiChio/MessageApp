@@ -3,6 +3,7 @@ import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/admin_home_screen.dart';
+import 'screens/users_list_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         '/register': (_) => const RegisterScreen(),
         '/home': (_) => const HomeScreen(),
         '/adminHome': (context) => const AdminHomeScreen(), // crear esta pantalla
+        '/users': (_) => const UsersListScreen(),
       },
     );
   }

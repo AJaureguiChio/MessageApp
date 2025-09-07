@@ -26,21 +26,9 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.person, size: 100, color: Colors.blue),
-            const SizedBox(height: 20),
-            Text(
-              LanguageService.textJsonReference("welcome") + email,
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              LanguageService.textJsonReference("you_regular"),
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () => Navigator.pushNamed(context, '/users'),
+          child: const Text('Ver chats'),
         ),
       ),
     );
