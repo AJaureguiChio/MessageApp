@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/chat_service.dart';
 import '../models/chat_message.dart';
 import 'package:intl/intl.dart';
+import '../services/webrtc_service.dart';
+import '../screens/call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String otherUid;
@@ -41,7 +43,34 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.otherEmail)),
+      appBar: AppBar(
+        title: Text(widget.otherEmail),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.video_call),
+            onPressed: () async {
+              print('📹 Botón pulsado');
+              try {
+                final room = await WebRTCService().createOffer(widget.otherUid);
+                print('✅ Offer creada, room: $room');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CallScreen(
+                      roomId: room,
+                      otherUid: widget.otherUid,
+                      amICaller: true,
+                    ),
+                  ),
+                );
+                print('✅ Navegación lanzada');
+              } catch (e) {
+                print('❌ Error al crear offer: $e');
+              }
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
