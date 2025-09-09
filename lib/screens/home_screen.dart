@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     LanguageService.loadJson();
 
     final authService = AuthService();
-    final email = authService.currentUser?.email ?? 'Usuario';
+    // final email = authService.currentUser?.email ?? 'Usuario';
 
     return Scaffold(
       appBar: AppBar(

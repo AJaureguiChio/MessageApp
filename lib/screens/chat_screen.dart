@@ -66,6 +66,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 print('✅ Navegación lanzada');
               } catch (e) {
                 print('❌ Error al crear offer: $e');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Error: $e')));
               }
             },
           ),

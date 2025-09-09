@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/chat_service.dart';
-import '../services/webrtc_service.dart'; // Para la llamada
+// import '../services/webrtc_service.dart'; // Para la llamada
 import '../screens/call_screen.dart';
 import 'chat_screen.dart';
 
