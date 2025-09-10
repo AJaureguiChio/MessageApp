@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../services/webrtc_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/call_signal.dart';
 
 class CallScreen extends StatefulWidget {
   final String roomId;
@@ -24,10 +26,27 @@ class _CallScreenState extends State<CallScreen> {
   void initState() {
     super.initState();
     _service = WebRTCService();
-    _service.initRenderers().then((_) {
-      // 1. abre TU cámara
-      _service.openUserMedia().then((_) => setState(() {}));
-      // 2. escucha señales (cuando el otro responda cambiamos vista)
+    _service.initRenderers().then((_) async {
+      await _service.openUserMedia();
+      setState(() {});
+
+      // 1. Procesar CUALQUIER offer que ya esté en la sala
+      final snap = await FirebaseFirestore.instance
+          .collection('calls')
+          .doc(widget.roomId)
+          .collection('signals')
+          .where('type', isEqualTo: 'offer')
+          .get();
+
+      print('🔎 Ofertas ya en sala: ${snap.docs.length}');
+
+      if (snap.docs.isNotEmpty && !widget.amICaller) {
+        final sig = CallSignal.fromMap(snap.docs.first.data());
+        print('📞 Procesando offer encontrada');
+        await _service.handleOffer(sig.sdp!, sig.callerId); // público
+      }
+
+      // 2. Escuchar nuevas señales
       _service.listenSignals(widget.roomId, widget.amICaller);
     });
   }
@@ -40,34 +59,45 @@ class _CallScreenState extends State<CallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ¿Ya hay video del otro?
+    final hasRemote = _service.remoteRenderer.srcObject != null;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Tu cámara (grande mientras esperas)
+          // Cámara GRANDE: remoto si existe, si no local
           Positioned.fill(
-            child: RTCVideoView(_service.localRenderer, mirror: true),
-          ),
-          // Texto de espera
-          const Center(
-            child: Text(
-              'Esperando respuesta…',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            child: RTCVideoView(
+              hasRemote ? _service.remoteRenderer : _service.localRenderer,
+              mirror: !hasRemote,
             ),
           ),
-          // Mini-preview de tu cámara (mismo video, solo más pequeño)
-          Positioned(
-            right: 20,
-            top: 40,
-            width: 120,
-            height: 160,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
+
+          // Miniatura: siempre la propia
+          if (hasRemote)
+            Positioned(
+              right: 20,
+              top: 40,
+              width: 120,
+              height: 160,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                ),
+                child: RTCVideoView(_service.localRenderer, mirror: true),
               ),
-              child: RTCVideoView(_service.localRenderer, mirror: true),
             ),
-          ),
+
+          // Texto mientras no hay remoto
+          if (!hasRemote)
+            const Center(
+              child: Text(
+                'Esperando respuesta…',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+
           // Botón colgar
           Positioned(
             bottom: 40,
