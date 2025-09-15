@@ -80,15 +80,16 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<List<ChatMessage>>(
               stream: _chatService.messagesStream(widget.otherUid),
               builder: (context, snap) {
-                if (snap.hasError)
+                if (snap.hasError){
                   return Center(child: Text('Error: ${snap.error}'));
-                if (!snap.hasData)
+                }
+                if (!snap.hasData){
                   return const Center(child: CircularProgressIndicator());
-
+                }
                 final msgs = snap.data!;
-                if (msgs.isEmpty)
+                if (msgs.isEmpty){
                   return const Center(child: Text('Empieza la conversación'));
-
+                }
                 return ListView.builder(
                   reverse: true,
                   controller: _scroll,

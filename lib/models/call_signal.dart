@@ -1,11 +1,13 @@
+// models/call_signal.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CallSignal {
-  final String type;   // offer | answer | candidate
-  final String? sdp;   // solo offer/answer
-  final String? candidate; // solo candidate
+  final String type;
+  final String? sdp;
+  final String? candidate;
   final String callerId;
   final String calleeId;
+  final Timestamp timestamp;
 
   CallSignal({
     required this.type,
@@ -13,22 +15,30 @@ class CallSignal {
     this.candidate,
     required this.callerId,
     required this.calleeId,
-  });
+    Timestamp? timestamp,
+  }) : timestamp = timestamp ?? Timestamp.now();
 
-  Map<String, dynamic> toMap() => {
-        'type': type,
-        'sdp': sdp,
-        'candidate': candidate,
-        'callerId': callerId,
-        'calleeId': calleeId,
-        'timestamp': FieldValue.serverTimestamp(),
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'type': type,
+      'sdp': sdp,
+      'candidate': candidate,
+      'callerId': callerId,
+      'calleeId': calleeId,
+      'timestamp': timestamp,
+    };
+  }
 
-  factory CallSignal.fromMap(Map<String, dynamic> map) => CallSignal(
-        type: map['type'],
-        sdp: map['sdp'],
-        candidate: map['candidate'],
-        callerId: map['callerId'],
-        calleeId: map['calleeId'],
-      );
+  factory CallSignal.fromMap(Map<String, dynamic> map) {
+    return CallSignal(
+      type: map['type'],
+      sdp: map['sdp'],
+      candidate: map['candidate'],
+      callerId: map['callerId'],
+      calleeId: map['calleeId'],
+      timestamp: map['timestamp'],
+    );
+  }
+
+  String? get sdpString => sdp;
 }

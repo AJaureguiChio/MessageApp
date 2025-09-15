@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/chat_service.dart';
-import '../services/webrtc_service.dart';
 import '../screens/call_screen.dart';
 import 'chat_screen.dart';
 
@@ -43,14 +42,17 @@ class _UsersListScreenState extends State<UsersListScreen> {
             child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: chatService.getUsers(),
               builder: (context, snap) {
-                if (snap.hasError)
+                if (snap.hasError) {
                   return Center(child: Text('Error: ${snap.error}'));
-                if (!snap.hasData)
+                }
+                if (!snap.hasData) {
                   return const Center(child: CircularProgressIndicator());
+                }
 
                 final users = snap.data!;
-                if (users.isEmpty)
+                if (users.isEmpty) {
                   return const Center(child: Text('No hay usuarios'));
+                }
 
                 return ListView.builder(
                   itemCount: users.length,
@@ -161,8 +163,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            CallScreen(roomId: roomId, otherUid: callerId, amICaller: false),
+        builder: (_) => CallScreen(roomId: roomId, amICaller: false),
       ),
     );
   }

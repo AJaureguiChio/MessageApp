@@ -1,116 +1,105 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../services/webrtc_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/call_signal.dart';
 
 class CallScreen extends StatefulWidget {
-  final String roomId;
-  final String otherUid;
+  final String roomId;   // puedes pasarlo al abrir la pantalla
   final bool amICaller;
+
   const CallScreen({
-    super.key,
+    Key? key,
     required this.roomId,
-    required this.otherUid,
     required this.amICaller,
-  });
+  }) : super(key: key);
 
   @override
   State<CallScreen> createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
-  late final WebRTCService _service;
+  late final WebRTCService _webrtc;
 
   @override
   void initState() {
     super.initState();
-    _service = WebRTCService();
-    _service.initRenderers().then((_) async {
-      await _service.openUserMedia();
-      setState(() {});
+    _webrtc = WebRTCService();
+    _init();
+  }
 
-      // 1. Procesar CUALQUIER offer que ya esté en la sala
-      final snap = await FirebaseFirestore.instance
-          .collection('calls')
-          .doc(widget.roomId)
-          .collection('signals')
-          .where('type', isEqualTo: 'offer')
-          .get();
+  Future<void> _init() async {
+    await _webrtc.initRenderers();
+    await _webrtc.openUserMedia();
 
-      print('🔎 Ofertas ya en sala: ${snap.docs.length}');
+    // if (widget.amICaller) {
+    //   await _webrtc.createRoom(widget.roomId);
+    // } else {
+    //   await _webrtc.joinRoom(widget.roomId);
+    // }
 
-      if (snap.docs.isNotEmpty && !widget.amICaller) {
-        final sig = CallSignal.fromMap(snap.docs.first.data());
-        print('📞 Procesando offer encontrada');
-        await _service.handleOffer(sig.sdp!, sig.callerId); // público
-      }
-
-      // 2. Escuchar nuevas señales
-      _service.listenSignals(widget.roomId, widget.amICaller);
-    });
+    _webrtc.listenSignals(widget.roomId, widget.amICaller);
   }
 
   @override
   void dispose() {
-    _service.hangUp();
+    _webrtc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // ¿Ya hay video del otro?
-    final hasRemote = _service.remoteRenderer.srcObject != null;
-
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: const Text('Videollamada'),
+        backgroundColor: Colors.black,
+      ),
       body: Stack(
         children: [
-          // Cámara GRANDE: remoto si existe, si no local
+          // Video remoto (pantalla completa)
           Positioned.fill(
             child: RTCVideoView(
-              hasRemote ? _service.remoteRenderer : _service.localRenderer,
-              mirror: !hasRemote,
+              _webrtc.remoteRenderer,
+              objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
             ),
           ),
-
-          // Miniatura: siempre la propia
-          if (hasRemote)
-            Positioned(
-              right: 20,
-              top: 40,
-              width: 120,
-              height: 160,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                ),
-                child: RTCVideoView(_service.localRenderer, mirror: true),
-              ),
-            ),
-
-          // Texto mientras no hay remoto
-          if (!hasRemote)
-            const Center(
-              child: Text(
-                'Esperando respuesta…',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-
-          // Botón colgar
+          // Video local (pequeña ventana flotante)
           Positioned(
-            bottom: 40,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: FloatingActionButton(
-                backgroundColor: Colors.red,
-                onPressed: () => Navigator.pop(context),
-                child: const Icon(Icons.call_end),
+            right: 16,
+            top: 16,
+            width: 120,
+            height: 160,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: RTCVideoView(
+                _webrtc.localRenderer,
+                mirror: true,
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               ),
             ),
           ),
+          // Controles
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                    backgroundColor: Colors.red,
+                    child: const Icon(Icons.call_end),
+                    onPressed: () async {
+                      _webrtc.dispose();
+                      if (mounted) Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
