@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: const Icon(Icons.video_call),
             onPressed: () async {
-              print('📹 Botón pulsado');
+              print('📹 Botón pulsado.');
               try {
                 final room = await WebRTCService().createOffer(widget.otherUid);
                 print('✅ Offer creada, room: $room');
