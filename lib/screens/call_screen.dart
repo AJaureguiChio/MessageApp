@@ -7,10 +7,10 @@ class CallScreen extends StatefulWidget {
   final bool amICaller;
 
   const CallScreen({
-    Key? key,
+    super.key,
     required this.roomId,
     required this.amICaller,
-  }) : super(key: key);
+  });
 
   @override
   State<CallScreen> createState() => _CallScreenState();

@@ -3,7 +3,6 @@ import '../services/chat_service.dart';
 import '../models/chat_message.dart';
 import 'package:intl/intl.dart';
 import '../services/webrtc_service.dart';
-import '../screens/call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String otherUid;

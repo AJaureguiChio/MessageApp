@@ -28,36 +28,36 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (user != null) {
-        // if (!user.emailVerified) {
-        //   await _authService.logout();
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           const Expanded(
-        //             child: Text('Debes verificar tu correo antes de iniciar sesión.'),
-        //           ),
-        //           TextButton(
-        //             onPressed: () async {
-        //               await user.sendEmailVerification();
-        //               ScaffoldMessenger.of(context).showSnackBar(
-        //                 const SnackBar(
-        //                   content: Text('Correo de verificación reenviado.'),
-        //                 ),
-        //               );
-        //             },
-        //             child: const Text(
-        //               'Reenviar',
-        //               style: TextStyle(color: Colors.white),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   );
-        //   return;
-        // }
+        if (!user.emailVerified) {
+          await _authService.logout();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(
+                    child: Text('Debes verificar tu correo antes de iniciar sesión.'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await user.sendEmailVerification();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Correo de verificación reenviado.'),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Reenviar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          return;
+        }
 
         // Verificar el rol del usuario y redirigir según corresponda
         final role = await _roleService.getUserRole(user.uid);
